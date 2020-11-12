@@ -1,6 +1,4 @@
 import random
-import plot
-
 
 class Edge:
     def __init__(self, energy_limit):
@@ -151,7 +149,8 @@ class AntColony:
         solution = []
         for cycle in range(self.cycles):
             for ant in self.ants:
-                for _ in self.graph.nodes: #[:-1]:
+                #for _ in self.graph.nodes: #[:-1]:
+                while [x for x in self.consumers if x.demand > 0]:
                     ant.move()
                 if 0 != ant.total_cost < cost:
                     solution = ant.tabulist
@@ -159,13 +158,13 @@ class AntColony:
                 ant.updatePheromoneDelta()
                 self._updatePheromone()
                 ant.reset()
-            for node in self.graph.nodes:
-                node.resetEnergy()
-            for es in self.graph.edges:
-                for edge in es:
-                    if edge:
-                        edge.resetEnergy()
-            self.has_producers = True
+                for node in self.graph.nodes:
+                    node.resetEnergy()
+                for es in self.graph.edges:
+                    for edge in es:
+                        if edge:
+                            edge.resetEnergy()
+                self.has_producers = True
         return cost, solution
 
 
@@ -199,8 +198,7 @@ class Ant:
 
     def _getAllowed(self):
         allowed = self.node.neighbours
-        return [x for x in allowed if (self.colony.graph.getIndex(x) not in self.tabulist
-                                       and self.colony.graph.getEdge(self.node, x).validateEnergy(self.energy))]
+        return [x for x in allowed if self.colony.graph.getEdge(self.node, x).validateEnergy(self.energy)]
 
     def _computeEnergy(self):
         charge = min(self.node.demand, self.energy)

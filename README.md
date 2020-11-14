@@ -12,4 +12,4 @@ Run `python main.py` to generate a random graph and plot its solution.
 
 ### Example plot:
 
-![Example][images/example.png]
+![Example](images/example.png)

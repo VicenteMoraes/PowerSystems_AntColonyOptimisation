@@ -149,14 +149,12 @@ class AntColony:
         solution = []
         for cycle in range(self.cycles):
             for ant in self.ants:
-                #for _ in self.graph.nodes: #[:-1]:
                 while [x for x in self.consumers if x.demand > 0]:
                     ant.move()
                 if 0 != ant.total_cost < cost:
                     solution = ant.tabulist
                     cost = ant.total_cost
                 ant.updatePheromoneDelta()
-                self._updatePheromone()
                 ant.reset()
                 for node in self.graph.nodes:
                     node.resetEnergy()
@@ -165,6 +163,7 @@ class AntColony:
                         if edge:
                             edge.resetEnergy()
                 self.has_producers = True
+            self._updatePheromone()
         return cost, solution
 
 
